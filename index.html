@@ -340,6 +340,39 @@
 </li>
 </ol>
 <p>1.8默认的垃圾回收: PS + ParallelOld</p>
+<h1 id="常见垃圾回收器组合参数设定-1-8"><a href="#常见垃圾回收器组合参数设定-1-8" class="headerlink" title="常见垃圾回收器组合参数设定: (1.8)"></a>常见垃圾回收器组合参数设定: (1.8)</h1><ul>
+<li><p>-XX:+UseSerialGC = Serial New (DefNew) + Serial Old</p>
+<ul>
+<li>小型程序。默认情况下不会是这种选项，HotSpot会根据计算及配置和DK版本自动选择收集器</li>
+</ul>
+</li>
+<li><p>-XX:+UseParNewGC = ParNew + SerialOld</p>
+<ul>
+<li>这个组合已经很少用(在某些版本中已经废弃)</li>
+<li><a href="https://stackoverflow.com/questions/34962257/why-remove-support-for-parnewserialold-anddefnewcms-in-the-future" target="_blank" rel="noopener">https://stackoverflow.com/questions/34962257/why-remove-support-for-parnewserialold-anddefnewcms-in-the-future</a></li>
+</ul>
+</li>
+<li><p>-XX:+UseConc(urrent)MarkSweepGC = ParNew + CMS + Serial Old</p>
+</li>
+<li><p>-XX:+UseParallelGC = Parallel Scavenge + Parallel Old (1.8默认) [ PS + SerialOld]</p>
+</li>
+<li><p>-XX:+UseParallelOldGC = Parallel Scavenge + Parallel Old</p>
+</li>
+<li><p>-XX:+UseG1GC = G1</p>
+</li>
+<li><p>Linux中没找到默认GC的查看方法，而windows中会打印UseParallelGC</p>
+<ul>
+<li>java +XX:+PrintCommandLineFlags -version</li>
+<li>通过GC的日志来分辨</li>
+</ul>
+</li>
+<li><p>Linux下1.8版本默认的垃圾回收器到底是什么?</p>
+<ul>
+<li>1.8.0. .181默认(看不出来) Copy MarkCompact</li>
+<li>1.8.0_222默认PS+PO</li>
+</ul>
+</li>
+</ul>
 <h1 id="调优前的基础概念"><a href="#调优前的基础概念" class="headerlink" title="调优前的基础概念:"></a>调优前的基础概念:</h1><ol>
 <li>吞吐量:用户代码时间1 (用户代码执行时间+垃圾回收时间)</li>
 <li>响应时间: STW越短，响应时间越好</li>
@@ -448,7 +481,7 @@
 </li>
 <li><p>设定日志参数</p>
 <ol>
-<li>-Xlogg:/optxx/xx.xxx-gc 9%t.log -XX:.+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5<br>-XX:GCLogFileSize=20M -XX:+PrintGCDetails -XX:+ PrintGCDateStamps -XX:+ PrintGCCause</li>
+<li>-Xlogg:/optxx/xx.xxx-gc-%t.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5<br>-XX:GCLogFileSize=20M -XX:+PrintGCDetails -XX:+ PrintGCDateStamps -XX:+PrintGCCause</li>
 <li>或者每天产生-个日志文件</li>
 </ol>
 </li>
@@ -488,9 +521,7 @@
 </li>
 </ul>
 <h1 id="优化环境"><a href="#优化环境" class="headerlink" title="优化环境"></a>优化环境</h1><ol>
-<li><p>有一个50万PV的资料类网站(从磁盘提取文档到内存)原服务器32位, 1.5G</p>
-<p>的堆，用户反馈网站比较缓慢，因此公司决定升级，新的服务器为64位，16G</p>
-<p>的堆内存，结果用户反馈卡顿十分严重,反而比以前效率更低了</p>
+<li><p>有一个50万PV的资料类网站(从磁盘提取文档到内存)原服务器32位, 1.5G的堆，用户反馈网站比较缓慢，因此公司决定升级，新的务器为64位，16G的堆内存，结果用户反馈卡顿十分严重,反而比以前效率更低了</p>
 <ol>
 <li><p>为什么原网站慢?</p>
 <p>很多用户浏览数据，很多数据load到内存,内存不足，频繁GC， STW长， 响应时间变慢</p>
@@ -506,9 +537,9 @@
 <li><p>系统CPU经常100%，如何调优? (面试高频)</p>
 <p>CPU100%那么一定有线程在占用系统资源,</p>
 <ol>
-<li><p>找出哪个进程cpu高(top) I</p>
+<li><p>找出哪个进程cpu高(top) </p>
 </li>
-<li><p>该进程中的哪个线程cpu高(top -Hp) .</p>
+<li><p>该进程中的哪个线程cpu高(top -Hp) </p>
 </li>
 <li><p>导出该线程的堆栈(jstack)</p>
 </li>
@@ -536,7 +567,7 @@
 <li><p>测试代码: .</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.math.BigDecimal;</span><br><span class="line"><span class="keyword">import</span> java.uti1.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"><span class="keyword">import</span> java.uti1.List;</span><br><span class="line"><span class="keyword">import</span> java.uti1.concurrent.scheduledThreadPoolExecutor;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ThreadPoo1 Executor;</span><br><span class="line"><span class="keyword">import</span> java.uti1.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 从数据库中读取信用数据，套用模型，并把结果进行记录和传输</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 风险评估</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Kason</span></span><br><span class="line"><span class="comment"> * date 2020-05-24</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * 可能导致频繁FullGZ 或者 OOM</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FullGC_Problem01</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">CardInfo</span> </span>&#123;</span><br><span class="line">        BigDecimal price = <span class="keyword">new</span> BigDecimal(<span class="number">0.0</span>);</span><br><span class="line">        String name = <span class="string">"张三"</span>;</span><br><span class="line">        <span class="keyword">int</span> age = <span class="number">5</span>;</span><br><span class="line">        Date birthdate = <span class="keyword">new</span> Date();</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">m</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ScheduledThreadPoolExecutor executor =</span><br><span class="line">            <span class="keyword">new</span> ScheduledThreadPoolExecutor(<span class="number">50</span>,<span class="keyword">new</span> ThreadPoolExecutor.DiscardOldestPolicy());</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        executor.setMaximumPoolSize(<span class="number">50</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (;;)&#123;</span><br><span class="line">            modelFit();</span><br><span class="line">            Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">modelFit</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        List&lt;CardInfo&gt; takeList = getAllCardInfo();</span><br><span class="line">        takeList.forEach(info -&gt;&#123;</span><br><span class="line">            <span class="comment">// do something</span></span><br><span class="line">            executor.scheduleWithFixedDelay(()-&gt;&#123;</span><br><span class="line">                <span class="comment">// do sth with info</span></span><br><span class="line">                info.m();</span><br><span class="line">            &#125;,<span class="number">2</span>,<span class="number">3</span>, TimeUnit.SECONDS);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> List&lt;CardInfo&gt; <span class="title">getAllCardInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        List&lt;CardInfo&gt; taskList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">            CardInfo ci =<span class="keyword">new</span> CardInfo();</span><br><span class="line">            taskList.add(ci);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> taskList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>java -Xms200M -Xmx200M -XX:+PrintGC com.example.FullGC_Problem01</p>
+<li><p>java -Xms200M -Xmx200M -XX:+PrintGC FullGC_Problem01</p>
 </li>
 <li><p>一般是运维团队首先受到报警信息(CPU Memory)</p>
 </li>
@@ -554,13 +585,84 @@
 </li>
 <li><p>jmap - histo 4655 | head -20，查找有多少对象产生</p>
 </li>
-<li><p>jmap -dump:format=b,file=xxx pid :<br>线上系统，内存特别大, jmap执行期间会对进程产生很大影响，甚至卡顿(电商不适合)<br>1：设定了参数HeapDump, 00M的时候会自动产生堆转储文件<br>2：很多服务器备份(高可用)，停掉这台服务器对其他服务器不影响<br>3：在线定位(一般小点儿公司用不到)</p>
+<li><p>jmap -dump:format=b,file=xxx pid :<br>线上系统，内存特别大, jmap执行期间会对进程产生很大影响，甚至卡顿(电商不适合)<br>1：设定了参数HeapDump, 00M的时候会自动产生堆转储文件（不是很专业，因为多有监控，内存增长就会报警）<br>2：<font color='red'>很多服务器备份(高可用)，停掉这台服务器对其他服务器不影响</font><br>3：在线定位(一般小点儿公司用不到)</p>
+<p>4：在测试环境中压测(产生类似内存增长问题，在堆还不是很大的时候进行转储)</p>
 </li>
-<li><p>java -Xms20M -Xmx20M -XX:+UseParallelGC -XX:+HeapDumpOnOutOfMemoryError<br>com.example.FullGC_Problem01</p>
+<li><p>java -Xms20M -Xmx20M -XX:+UseParallelGC -XX:+HeapDumpOnOutOfMemoryError FullGC_Problem01</p>
 </li>
-<li><p>使用MAT / jhat /jvisualvm进行dump文件分析<br><a href="https://www.cnblogs.com/baihuitestsoftware/articles/6406271" target="_blank" rel="noopener">https://www.cnblogs.com/baihuitestsoftware/articles/6406271</a> .htm!<br>jhat小-mx512M xxx.dump<br><a href="http://192.168.17.11:7000" target="_blank" rel="noopener">http://192.168.17.11:7000</a><br>拉到最后:找到对应链接<br>可以使用OQL查找特定问题对象</p>
+<li><p>使用MAT / jhat /jvisualvm 进行dump文件分析<br><a href="https://www.cnblogs.com/baihuitestsoftware/articles/6406271.html" target="_blank" rel="noopener">https://www.cnblogs.com/baihuitestsoftware/articles/6406271.html</a><br>jhat -J-mx512M xxx.dump<br><a href="http://192.168.17.11:7000" target="_blank" rel="noopener">http://192.168.17.11:7000</a><br>拉到最后:找到对应链接<br>可以使用OQL查找特定问题对象</p>
 </li>
 <li><p>找到代码的问题</p>
+</li>
+</ol>
+<h2 id="arthas在线排查工具"><a href="#arthas在线排查工具" class="headerlink" title="arthas在线排查工具"></a>arthas在线排查工具</h2><ul>
+<li><p>为什么需要在线排查?</p>
+<p>在生产上我们经常会碰到一些不好排查的问题，例如线程安全问题，用最简单的threaddump或者heapdump<br>不好查到问题原因。为了排查这些问题，有时我们会临时加一-些日志， 比如在一些关键的函数里打印出入参,<br>然后重新打包发布，如果打了日志还是没找到问题，继续加日志,重新打包发布。对于上线流程复杂而且审核<br>比较严的公司，从改代码到上线需要层层的流转，会大大影响问题排查的进度。</p>
+</li>
+<li><p>jvm观察jvm信息</p>
+</li>
+<li><p>thread定位线程问题</p>
+</li>
+<li><p>dashboard 观察系统情况</p>
+</li>
+<li><p>heapdump + jhat分析</p>
+</li>
+<li><p>jad反编译</p>
+<p>动态代理生成类的问题定位</p>
+<p>第三方的类(观察代码)</p>
+<p>版本问题(确定自己最新提交的版本是不是被使用)</p>
+</li>
+<li><p>redefine 热替换</p>
+<p>前有些限制条件:只能改方法实现(方法已经运行完成)，不能改方法名，不能改属性</p>
+<p>m() -&gt; mm()</p>
+</li>
+<li><p>sc-search class</p>
+</li>
+<li><p>watch - watch method</p>
+</li>
+<li><p>没有包含的功能: jmap</p>
+</li>
+</ul>
+<h1 id="案例汇总"><a href="#案例汇总" class="headerlink" title="案例汇总"></a>案例汇总</h1><p>00M产生的原因多种多样，有些程序未必产生00M,不断FGC(CPU飙高，但内存回收特别少) (上面案例)</p>
+<ol>
+<li><p>硬件升级系统反而卡顿的问题(见上)</p>
+</li>
+<li><p>线程池不当运用产生00M问题(见上)</p>
+<p>不断的往List里加对象(实在太LOW)</p>
+</li>
+<li><p>smile jira问题<br>实际系统不断重启<br>解决问题 加内存 + 更换垃圾回收器G1<br>真正问题在哪儿?不知道</p>
+</li>
+<li><p>tomcat http-header-size过大问题(Hector)</p>
+</li>
+<li><p>lambda表达式导致方法区溢出问题(MethodArea / Perm Metaspace)<br>LambdaGC.java -XX:MaxMetaspaceSize=9M -XX:+PrintGCDetails</p>
+</li>
+<li><p>直接内存溢出问题(少见)</p>
+<p>《深入理解]ava虚拟机》P59,使用Unsafe分配直接内存,或者使用NIO的问题</p>
+</li>
+<li><p>栈溢出问题</p>
+<p>-Xss设定太小</p>
+</li>
+<li><p>比较一下这两段程序的异同， 分析哪-个是更优的写法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Object o= nu11;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">100</span>; <span class="number">1</span>++) &#123;</span><br><span class="line">	o = <span class="keyword">new</span> object();</span><br><span class="line">	<span class="comment">//业务处理</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">100</span>; i++) &#123;</span><br><span class="line">	Object o = <span class="keyword">new</span> Object();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="9">
+<li><p>重写finalize引发频繁GC</p>
+<p>小米云，HBase同步系统，系统通过nginx访问超时报警，最后排查, C++程序员重写finalize引发频繁GC问题</p>
+<p>为什么C++程序员会重写finalize? (new delete)</p>
+<p>finalize耗时比较长(200ms)</p>
+</li>
+<li><p>如果有一个系统，内存一直消耗不超过10%，但是观察GC日志，发现FGC总是频繁产生，会是什么引起的?</p>
+<p>System.gc() (这个比较Low)</p>
+</li>
+<li><p>Distuptor有个可以设置链的长度,如果过大,然后对象大，消费完不主动释放，会溢出(来自死物风情)</p>
+</li>
+<li><p>用jvm都会溢出，mycat用崩过，1.6.5某 个临时版本解析sq|子查询算法有问题，9个exists的联合sq|就导致生成几百万的对象(来自死物风情)</p>
+</li>
+<li><p>new大量线程，会产生native thread 00M， (low) 应该用线程池，<br>解决方案:减少堆空间(太TMlow了) ,预留更多内存产生native thread<br>JVM内存占物理内存比例50% - 80%</p>
 </li>
 </ol>
 <h1 id="GC常用参数"><a href="#GC常用参数" class="headerlink" title="GC常用参数"></a>GC常用参数</h1><ul>
@@ -685,20 +787,6 @@
 <p>启动G1的堆空间占用比例</p>
 </li>
 </ul>
-<h1 id="案例汇总"><a href="#案例汇总" class="headerlink" title="案例汇总"></a>案例汇总</h1><p>00M产生的原因多种多样，有些程序未必产生00M,不断FGC(CPU飙高，但内存回收特别少) (. 上面案例)</p>
-<ol>
-<li><p>硬件升级系统反而卡顿的问题(见上)</p>
-</li>
-<li><p>线程池不当运用产生00M问题(见上)</p>
-<p>不断的往List里加对象(实在太LOW)</p>
-</li>
-<li><p>smile jira问题<br>实际系统不断重启<br>解决问题加内存+更换垃圾回收器G1.<br>真正问题在哪儿?不知道</p>
-</li>
-<li><p>tomcat http-header-size过大问题(Hector)</p>
-</li>
-<li><p>lambda表达式导致方法区溢出问题(MethodArea / Perm Metaspace)<br>LambdaGC.java -XX:MaxMetaspaceSize=9M -XX:+PrintGCDetails</p>
-</li>
-</ol>
 
       
     </div>
