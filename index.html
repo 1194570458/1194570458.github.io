@@ -272,19 +272,21 @@
 <h1 id="回收算法"><a href="#回收算法" class="headerlink" title="回收算法"></a>回收算法</h1><ul>
 <li><p>Mark-Sweep（标记清除）</p>
 <p>会产生碎片</p>
-<p><img src="E:%5CHexo%5Csource_posts%5CJVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98%5Cimage-20200524000022416.png" alt="image-20200524000022416"></p>
+<img src="/2020/05/23/JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/image-20200524000022416.png" class="">
 </li>
 <li><p>Copying（拷贝）</p>
 <p>内存浪费</p>
-<p><img src="E:%5CHexo%5Csource_posts%5CJVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98%5Cimage-20200524000135753.png" alt="image-20200524000135753"></p>
+<img src="/2020/05/23/JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/image-20200524000135753.png" class="">
 </li>
 <li><p>Mark-Compact（标记压缩）</p>
 <p>效率比copy低</p>
-<p><img src="E:%5CHexo%5Csource_posts%5CJVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98%5Cimage-20200524000156824.png" alt="image-20200524000156824"></p>
+<img src="/2020/05/23/JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/image-20200524000156824.png" class="">
+
 </li>
 </ul>
 <h1 id="常见的垃圾回收器"><a href="#常见的垃圾回收器" class="headerlink" title="常见的垃圾回收器"></a>常见的垃圾回收器</h1><p>Garbage Collectors（JDK 1.0 - JDK 14）</p>
-<p><img src="E:%5CHexo%5Csource_posts%5CJVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98%5Cimage-20200524000248378.png" alt="image-20200524000248378"></p>
+<img src="/2020/05/23/JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/image-20200524000248378.png" class="">
+
 <ol>
 <li><p>垃圾回收器的发展路线，是随着内存越来越大的过程而演进</p>
 <p>从分代算法演化到不分代算法</p>
@@ -395,11 +397,13 @@
 </ol>
 <h1 id="PS-GC日志详解"><a href="#PS-GC日志详解" class="headerlink" title="PS GC日志详解"></a>PS GC日志详解</h1><p>每种垃圾回收器的日志格式是不同的.</p>
 <p>PS日志格式</p>
-<p><img src="E:%5CHexo%5Csource_posts%5CJVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98%5Cimage-20200524141306845.png" alt="image-20200524141306845"></p>
+<img src="/2020/05/23/JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/image-20200524141306845.png" class="">
+
 <p>heap dump部分:</p>
 <p>eden space 5632K， 94% used [000000000ff980000 , 00000000ffeb 3e28，0x0000000fff00000)</p>
 <p>后面的内存地址指的是，起始地址，使用空间结束地址，整体空间结束地址</p>
-<p><img src="E:%5CHexo%5Csource_posts%5CJVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98%5Cimage-20200524141412577.png" alt="image-20200524141412577"></p>
+<img src="/2020/05/23/JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/image-20200524141412577.png" class="">
+
 <p>total = eden + 1个survivor</p>
 <h1 id="调优前的基础概念-1"><a href="#调优前的基础概念-1" class="headerlink" title="调优前的基础概念:"></a>调优前的基础概念:</h1><ol>
 <li><p>吞吐量:用户代码时间/ (用户代码执行时间+垃圾回收时间)</p>
