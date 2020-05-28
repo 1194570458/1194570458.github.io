@@ -7,12 +7,12 @@
   
   <title>JVM调优实战 | Kason的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="面试题大厂真题：2019年遇到的关于JVM GC的问题 GMS和G1的异同 - 百度 G1什么时候引发Full GC - 百度 说一个最熟悉的垃圾回收算法 - 百度 吞吐量优先和响应时间优先的回收器有哪些 - 百度 怎么判断内存泄漏 - 顺丰 讲一下CMS的流程 - 顺丰 为什么压缩指针超过32G失效 - 京东 什么是内存泄漏？GC调优有经验吗？一般出现GC问题你怎么解决？ -  淘宝 THrea">
+  <meta name="description" content="[TOC] 面试题大厂真题：2019年遇到的关于JVM GC的问题 GMS和G1的异同 - 百度 G1什么时候引发Full GC - 百度 说一个最熟悉的垃圾回收算法 - 百度 吞吐量优先和响应时间优先的回收器有哪些 - 百度 怎么判断内存泄漏 - 顺丰 讲一下CMS的流程 - 顺丰 为什么压缩指针超过32G失效 - 京东 什么是内存泄漏？GC调优有经验吗？一般出现GC问题你怎么解决？ -  淘宝">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM调优实战">
 <meta property="og:url" content="https://1194570458.github.io/2020/05/23/JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/index.html">
 <meta property="og:site_name" content="Kason的博客">
-<meta property="og:description" content="面试题大厂真题：2019年遇到的关于JVM GC的问题 GMS和G1的异同 - 百度 G1什么时候引发Full GC - 百度 说一个最熟悉的垃圾回收算法 - 百度 吞吐量优先和响应时间优先的回收器有哪些 - 百度 怎么判断内存泄漏 - 顺丰 讲一下CMS的流程 - 顺丰 为什么压缩指针超过32G失效 - 京东 什么是内存泄漏？GC调优有经验吗？一般出现GC问题你怎么解决？ -  淘宝 THrea">
+<meta property="og:description" content="[TOC] 面试题大厂真题：2019年遇到的关于JVM GC的问题 GMS和G1的异同 - 百度 G1什么时候引发Full GC - 百度 说一个最熟悉的垃圾回收算法 - 百度 吞吐量优先和响应时间优先的回收器有哪些 - 百度 怎么判断内存泄漏 - 顺丰 讲一下CMS的流程 - 顺丰 为什么压缩指针超过32G失效 - 京东 什么是内存泄漏？GC调优有经验吗？一般出现GC问题你怎么解决？ -  淘宝">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://1194570458.github.io/2020/05/23/JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/image-20200524000022416.png">
 <meta property="og:image" content="https://1194570458.github.io/2020/05/23/JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/image-20200524000135753.png">
@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://1194570458.github.io/2020/05/23/JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/image-20200524141306845.png">
 <meta property="og:image" content="https://1194570458.github.io/2020/05/23/JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/image-20200524141412577.png">
 <meta property="article:published_time" content="2020-05-23T13:45:22.000Z">
-<meta property="article:modified_time" content="2020-05-24T15:00:56.424Z">
+<meta property="article:modified_time" content="2020-05-28T15:02:04.181Z">
 <meta property="article:author" content="Kason Li">
 <meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary">
@@ -100,7 +100,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="面试题"><a href="#面试题" class="headerlink" title="面试题"></a>面试题</h1><h2 id="大厂真题：2019年遇到的关于JVM-GC的问题"><a href="#大厂真题：2019年遇到的关于JVM-GC的问题" class="headerlink" title="大厂真题：2019年遇到的关于JVM GC的问题"></a>大厂真题：2019年遇到的关于JVM GC的问题</h2><ol>
+        <p>[TOC]</p>
+<h1 id="面试题"><a href="#面试题" class="headerlink" title="面试题"></a>面试题</h1><h2 id="大厂真题：2019年遇到的关于JVM-GC的问题"><a href="#大厂真题：2019年遇到的关于JVM-GC的问题" class="headerlink" title="大厂真题：2019年遇到的关于JVM GC的问题"></a>大厂真题：2019年遇到的关于JVM GC的问题</h2><ol>
 <li>GMS和G1的异同 - 百度</li>
 <li>G1什么时候引发Full GC - 百度</li>
 <li>说一个最熟悉的垃圾回收算法 - 百度</li>
@@ -151,7 +152,7 @@
 </blockquote>
 <p>Epsilon -啥也不干(调试，确认不用GC参与就能干完活儿)</p>
 </li>
-<li><p>JDK诞生Serial追随提高效率,诞生了PS,为了配合CMS,诞生了PN, CMS是1 .4版本后期引入，CMS是里程<br>碑式的GC，它开启了并发回收的过程，但是CMS毛病较多,因此目前任何一个JDK版本默认是CMS<br>并发垃圾回收是因为无法忍受STW</p>
+<li><p>JDK诞生Serial追随提高效率,诞生了PS,为了配合CMS,诞生了PN, CMS是1 .4版本后期引入，CMS是里程<br> 碑式的GC，它开启了并发回收的过程，但是CMS毛病较多,因此目前任何一个JDK版本默认是CMS<br> 并发垃圾回收是因为无法忍受STW</p>
 </li>
 <li><p>Serial年轻代串行回收</p>
 </li>
@@ -165,7 +166,7 @@
 </li>
 <li><p>ConcurrentMarkSweep老年代并发的，垃圾回收和应用程序同时运行, 降低STW的时间(200ms)<br>CMS问题比较多，所以现在没有一个版本默认是CMS，只能手工指定<br>CMS既然是MarkSweep,就一-定会有碎片化的问题，碎片到达一定程度， CMS的老年代分配对象分配不下的<br>时候，使用SerialOld 进行老年代回收<br>想象-下:<br>PS + PO -&gt;加内存换垃圾回收器-&gt; PN + CMS + SerialOld (几个小时-几天的STW)<br>几十个G的内存，单线程回收-&gt; G1 + FGC几十个G -&gt;.上T内存的服务器ZGC<br>算法:三色标记+ Incremental Update</p>
 </li>
-<li><p>G1(200ms - 10ms)<br>算法:三色标记+ SATB</p>
+<li><p>G1(200ms - 10ms)<br> 算法:三色标记+ SATB</p>
 </li>
 <li><p>ZGC (10ms- 1ms) PK C++<br>算法: ColoredPointers + LoadBarrier</p>
 </li>
@@ -179,7 +180,7 @@
 </li>
 <li><p>PS上百兆-几个G</p>
 </li>
-<li><p>CMS- 20G<br>I</p>
+<li><p>CMS- 20G<br>  I</p>
 </li>
 <li><p>G1-上百G</p>
 </li>
@@ -328,7 +329,7 @@
 </li>
 <li><p>设定日志参数</p>
 <ol>
-<li>-Xlogg:/optxx/xx.xxx-gc-%t.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5<br>-XX:GCLogFileSize=20M -XX:+PrintGCDetails -XX:+ PrintGCDateStamps -XX:+PrintGCCause</li>
+<li>-Xlogg:/optxx/xx.xxx-gc-%t.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5<br> -XX:GCLogFileSize=20M -XX:+PrintGCDetails -XX:+ PrintGCDateStamps -XX:+PrintGCCause</li>
 <li>或者每天产生-个日志文件</li>
 </ol>
 </li>
@@ -424,11 +425,11 @@
 </li>
 <li><p>jps定位具体java进程<br>jstack定位线程状况，重点关注: WAITING BLOCKED<br>eg.<br>waiting on &lt;0000000088ca3310&gt; (a java.lang.Object)<br>假如有一个进程中100个线程，很多线程都在waiting on <xx>，一定要找到是哪个线程持有这把锁<br>怎么找？搜索jstack dump的信息，找<xx>，看哪个线程持有这把锁RUNNABLE<br>作业: 1：写一个死锁程序，用jstack观察 2：写一个程序,，一个线程持有锁不释放,其他线程等待</p>
 </li>
-<li><p>为什么阿里规范里规定，线程的名称(尤其是线程池)都要写有意义的名称<br>怎么样自定义线程池里的线程名称? (自定 义ThreadFactory)</p>
+<li><p>为什么阿里规范里规定，线程的名称(尤其是线程池)都要写有意义的名称<br> 怎么样自定义线程池里的线程名称? (自定 义ThreadFactory)</p>
 </li>
 <li><p>jinfo pid</p>
 </li>
-<li><p>jstat -gc 动态观察gc情况 / 阅读GC日志发现频繁GC / arthas观察 / jconsole/jvisualVM/ Jprofiler (最好用)<br>jstat -gc 4655 500:每个500个毫秒打印GC的情况<br>如果面试官问你是怎么定位00M问题的?如果你回答用图形界面(错误)<br>1：已经上线的系统不用图形界面用什么? (cmdline arthas)<br>2：图形界面到底用在什么地方?测试!测试的时候进行监控! (压测观察)</p>
+<li><p>jstat -gc 动态观察gc情况 / 阅读GC日志发现频繁GC / arthas观察 / jconsole/jvisualVM/ Jprofiler (最好用)<br> jstat -gc 4655 500:每个500个毫秒打印GC的情况<br> 如果面试官问你是怎么定位00M问题的?如果你回答用图形界面(错误)<br> 1：已经上线的系统不用图形界面用什么? (cmdline arthas)<br> 2：图形界面到底用在什么地方?测试!测试的时候进行监控! (压测观察)</p>
 </li>
 <li><p>jmap - histo 4655 | head -20，查找有多少对象产生</p>
 </li>
