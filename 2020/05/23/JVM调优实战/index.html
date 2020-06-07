@@ -7,12 +7,12 @@
   
   <title>JVM调优实战 | Kason的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="[TOC] 面试题大厂真题：2019年遇到的关于JVM GC的问题 GMS和G1的异同 - 百度 G1什么时候引发Full GC - 百度 说一个最熟悉的垃圾回收算法 - 百度 吞吐量优先和响应时间优先的回收器有哪些 - 百度 怎么判断内存泄漏 - 顺丰 讲一下CMS的流程 - 顺丰 为什么压缩指针超过32G失效 - 京东 什么是内存泄漏？GC调优有经验吗？一般出现GC问题你怎么解决？ -  淘宝">
+  <meta name="description" content="面试题大厂真题：2019年遇到的关于JVM GC的问题 GMS和G1的异同 - 百度 G1什么时候引发Full GC - 百度 说一个最熟悉的垃圾回收算法 - 百度 吞吐量优先和响应时间优先的回收器有哪些 - 百度 怎么判断内存泄漏 - 顺丰 讲一下CMS的流程 - 顺丰 为什么压缩指针超过32G失效 - 京东 什么是内存泄漏？GC调优有经验吗？一般出现GC问题你怎么解决？ -  淘宝 THrea">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM调优实战">
 <meta property="og:url" content="https://1194570458.github.io/2020/05/23/JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/index.html">
 <meta property="og:site_name" content="Kason的博客">
-<meta property="og:description" content="[TOC] 面试题大厂真题：2019年遇到的关于JVM GC的问题 GMS和G1的异同 - 百度 G1什么时候引发Full GC - 百度 说一个最熟悉的垃圾回收算法 - 百度 吞吐量优先和响应时间优先的回收器有哪些 - 百度 怎么判断内存泄漏 - 顺丰 讲一下CMS的流程 - 顺丰 为什么压缩指针超过32G失效 - 京东 什么是内存泄漏？GC调优有经验吗？一般出现GC问题你怎么解决？ -  淘宝">
+<meta property="og:description" content="面试题大厂真题：2019年遇到的关于JVM GC的问题 GMS和G1的异同 - 百度 G1什么时候引发Full GC - 百度 说一个最熟悉的垃圾回收算法 - 百度 吞吐量优先和响应时间优先的回收器有哪些 - 百度 怎么判断内存泄漏 - 顺丰 讲一下CMS的流程 - 顺丰 为什么压缩指针超过32G失效 - 京东 什么是内存泄漏？GC调优有经验吗？一般出现GC问题你怎么解决？ -  淘宝 THrea">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://1194570458.github.io/2020/05/23/JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/image-20200524000022416.png">
 <meta property="og:image" content="https://1194570458.github.io/2020/05/23/JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/image-20200524000135753.png">
@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://1194570458.github.io/2020/05/23/JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/image-20200524141306845.png">
 <meta property="og:image" content="https://1194570458.github.io/2020/05/23/JVM%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98/image-20200524141412577.png">
 <meta property="article:published_time" content="2020-05-23T13:45:22.000Z">
-<meta property="article:modified_time" content="2020-05-28T15:02:04.181Z">
+<meta property="article:modified_time" content="2020-06-07T08:58:02.131Z">
 <meta property="article:author" content="Kason Li">
 <meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary">
@@ -100,8 +100,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>[TOC]</p>
-<h1 id="面试题"><a href="#面试题" class="headerlink" title="面试题"></a>面试题</h1><h2 id="大厂真题：2019年遇到的关于JVM-GC的问题"><a href="#大厂真题：2019年遇到的关于JVM-GC的问题" class="headerlink" title="大厂真题：2019年遇到的关于JVM GC的问题"></a>大厂真题：2019年遇到的关于JVM GC的问题</h2><ol>
+        <h1 id="面试题"><a href="#面试题" class="headerlink" title="面试题"></a>面试题</h1><h2 id="大厂真题：2019年遇到的关于JVM-GC的问题"><a href="#大厂真题：2019年遇到的关于JVM-GC的问题" class="headerlink" title="大厂真题：2019年遇到的关于JVM GC的问题"></a>大厂真题：2019年遇到的关于JVM GC的问题</h2><ol>
 <li>GMS和G1的异同 - 百度</li>
 <li>G1什么时候引发Full GC - 百度</li>
 <li>说一个最熟悉的垃圾回收算法 - 百度</li>

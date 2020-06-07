@@ -93,8 +93,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>[TOC]</p>
-<h1 id="Synchronized"><a href="#Synchronized" class="headerlink" title="Synchronized"></a>Synchronized</h1><h2 id="1-常见面试题"><a href="#1-常见面试题" class="headerlink" title="1. 常见面试题"></a>1. 常见面试题</h2><p>请描述synchrnoized和reentrantlock的底层实现及重入的底层原理 - 百度 阿里</p>
+        <h1 id="Synchronized"><a href="#Synchronized" class="headerlink" title="Synchronized"></a>Synchronized</h1><h2 id="1-常见面试题"><a href="#1-常见面试题" class="headerlink" title="1. 常见面试题"></a>1. 常见面试题</h2><p>请描述synchrnoized和reentrantlock的底层实现及重入的底层原理 - 百度 阿里</p>
 <p>请描述锁的四种状态和升级过程 - 百度 阿里</p>
 <p>CAS的ABA问题如何解决 - 百度</p>
 <p>请谈一下AQS，为什么AQS的底层是CAS + volatile - 百度</p>
@@ -360,8 +359,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>[TOC]</p>
-<h1 id="Synchronized"><a href="#Synchronized" class="headerlink" title="Synchronized"></a>Synchronized</h1><h2 id="复习一下Synchronized用法"><a href="#复习一下Synchronized用法" class="headerlink" title="复习一下Synchronized用法"></a>复习一下Synchronized用法</h2><p>Synchronzied锁定的是对象，而不是代码</p>
+        <h1 id="Synchronized"><a href="#Synchronized" class="headerlink" title="Synchronized"></a>Synchronized</h1><h2 id="复习一下Synchronized用法"><a href="#复习一下Synchronized用法" class="headerlink" title="复习一下Synchronized用法"></a>复习一下Synchronized用法</h2><p>Synchronzied锁定的是对象，而不是代码</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">T</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Object o = <span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (o) &#123;</span><br><span class="line">            System.out.println(<span class="string">"Hello!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">m</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="comment">//        synchronized (this)</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">n</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="comment">//        synchronized (T.class)</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="字节码的实现"><a href="#字节码的实现" class="headerlink" title="字节码的实现"></a>字节码的实现</h2><p>在Idea运行以上代码，然后View-&gt; ShowBytecode</p>
@@ -484,8 +482,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>[TOC]</p>
-<h2 id="什么是redis，有哪些特征"><a href="#什么是redis，有哪些特征" class="headerlink" title="什么是redis，有哪些特征"></a>什么是redis，有哪些特征</h2><p>基于内存（快）</p>
+        <h2 id="什么是redis，有哪些特征"><a href="#什么是redis，有哪些特征" class="headerlink" title="什么是redis，有哪些特征"></a>什么是redis，有哪些特征</h2><p>基于内存（快）</p>
 <p>k，V （多数做缓存）</p>
 <p>单线程（worker） ，iothreads</p>
 <p>连接很多（连接池很多） ： nio多路复用（epoll）</p>
@@ -645,8 +642,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>[TOC]</p>
-<h1 id="面试题"><a href="#面试题" class="headerlink" title="面试题"></a>面试题</h1><h2 id="大厂真题：2019年遇到的关于JVM-GC的问题"><a href="#大厂真题：2019年遇到的关于JVM-GC的问题" class="headerlink" title="大厂真题：2019年遇到的关于JVM GC的问题"></a>大厂真题：2019年遇到的关于JVM GC的问题</h2><ol>
+        <h1 id="面试题"><a href="#面试题" class="headerlink" title="面试题"></a>面试题</h1><h2 id="大厂真题：2019年遇到的关于JVM-GC的问题"><a href="#大厂真题：2019年遇到的关于JVM-GC的问题" class="headerlink" title="大厂真题：2019年遇到的关于JVM GC的问题"></a>大厂真题：2019年遇到的关于JVM GC的问题</h2><ol>
 <li>GMS和G1的异同 - 百度</li>
 <li>G1什么时候引发Full GC - 百度</li>
 <li>说一个最熟悉的垃圾回收算法 - 百度</li>
